@@ -8,7 +8,7 @@ namespace DrankReus_api.Data
   {
     public WebshopContext(DbContextOptions<WebshopContext> options) : base(options) {}
 
-    public DbSet<User> Users;
+    public DbSet<User> Users { get; set; }
     
   }
 }
