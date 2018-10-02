@@ -3,19 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text.RegularExpressions;
-using CsvHelper.Configuration;
 using DrankReus_api.Data;
 using DrankReus_api.Models;
 using ExtensionMethod;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using Remotion.Linq.Clauses;
-
 namespace DrankReus_api.Controllers
 {
     [Route("api/[controller]")]
