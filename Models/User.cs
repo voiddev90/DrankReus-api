@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
-using Microsoft.AspNetCore.Identity;
 using System.Text;
 
 namespace DrankReus_api.Models
@@ -15,6 +14,12 @@ namespace DrankReus_api.Models
 
         [Required(ErrorMessage = "Een wachtwoord is verplicht")]
         public string Password { get; set; }
+
+        [Required(ErrorMessage = "Voornaam is verplicht")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Achternaam is verplicht")]
+        public string LastName { get; set; }
 
         public string Street { get; set; }
 
