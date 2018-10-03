@@ -22,17 +22,29 @@ namespace DrankReus_api.Controllers
         public IActionResult GetActionResult()
         {
             using (StreamReader d = new StreamReader(Directory.GetCurrentDirectory() + "/SeedData/Drank.json"))
+            using (StreamReader b = new StreamReader(Directory.GetCurrentDirectory() + "/SeedData/DrankBrand.json")) 
             using (StreamReader co = new StreamReader(Directory.GetCurrentDirectory() + "/SeedData/DrankCountry.json"))
             using (StreamReader ca = new StreamReader(Directory.GetCurrentDirectory() + "/SeedData/DrankCategory.json"))
             {
                 if (!db.Product.Any())
                 {
                     string djson = d.ReadToEnd();
+                    string bjson = b.ReadToEnd();
                     string cojson = co.ReadToEnd();
                     string cajson = ca.ReadToEnd();
                     List<Product> drank = JsonConvert.DeserializeObject<List<Product>>(djson);
                     List<Category> category = JsonConvert.DeserializeObject<List<Category>>(cajson);
                     List<Country> country = JsonConvert.DeserializeObject<List<Country>>(cojson);
+                    List<Brand> brand = JsonConvert.DeserializeObject<List<Brand>>(bjson);
+                    foreach (var entry in brand)
+                    {
+                        Brand productBrand = new Brand
+                        {
+                            Name = entry.Name
+                        };
+                        db.Add(productBrand);
+                    }
+                    db.SaveChanges();
                     foreach (var entry in category)
                     {
                         Category productCategory = new Category
@@ -56,7 +68,6 @@ namespace DrankReus_api.Controllers
                         Product prod = new Product
                         {
                             Alcoholpercentage = drink.Alcoholpercentage,
-                            Brand = drink.Brand,
                             Description = drink.Description,
                             Name = drink.Name,
                             Price = drink.Price,
@@ -65,6 +76,8 @@ namespace DrankReus_api.Controllers
                             CountryEntity =
                                 db.Country.Where(n => n.Name == drink.Country).Select(x => x).FirstOrDefault(),
                             CategoryEntity = db.Category.Where(n => n.Name == drink.Category).Select(x => x)
+                                .FirstOrDefault(),
+                            BrandEntity = db.Brand.Where(n => n.Name == drink.Brand).Select(x => x)
                                 .FirstOrDefault()
                         };
                         db.Add(prod);

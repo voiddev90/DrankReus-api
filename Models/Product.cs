@@ -28,7 +28,9 @@ using System.Text;
 
          [System.ComponentModel.DataAnnotations.Schema.NotMapped]
          public string Brand { get; set; }
-         
+
+         public Brand BrandEntity { get; set; }
+
          public Category CategoryEntity { get; set; }
          
          [System.ComponentModel.DataAnnotations.Schema.NotMapped]
