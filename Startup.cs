@@ -44,6 +44,8 @@ namespace DrankReus_api
                 app.UseHsts();
             }
             
+            SeedDatabase.Initialize(app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
+            
             app.UseHttpsRedirection();
             app.UseMvc();
         }
