@@ -19,48 +19,57 @@ namespace DrankReus_api
 
         public static void Initialize(IServiceProvider serviceProvider)
         {
-            using (StreamReader d = new StreamReader(Directory.GetCurrentDirectory() + "/SeedData/Drank.json"))
+            var db = serviceProvider.GetRequiredService<WebshopContext>();
+            if (!db.Product.Any())
             {
-                var db = serviceProvider.GetRequiredService<WebshopContext>();
-                var data = JObject.Parse(d.ReadToEnd());
-                foreach (var entry in data.SelectToken("$.Country"))
+                using (StreamReader d = new StreamReader(Directory.GetCurrentDirectory() + "/SeedData/Drank.json"))
                 {
-                    Country temp = new Country{Name = (string) entry["Name"]};
-                    db.Add(temp);
-                }
-                
-                foreach (var entry in data.SelectToken("$.Category"))
-                {
-                    Category temp = new Category{Name = (string) entry["Name"]};
-                    db.Add(temp);
-                }
-                foreach (var entry in data.SelectToken("$.Brand"))
-                {
-                    Brand temp = new Brand{Name = (string) entry["Name"]};
-                    db.Add(temp);
-                }
-                db.SaveChanges();
-                foreach (var entry in data.SelectToken("$.Drank"))
-                {
-                    Product prod = new Product
+
+                    var data = JObject.Parse(d.ReadToEnd());
+                    foreach (var entry in data.SelectToken("$.Country"))
                     {
-                        Alcoholpercentage = (decimal)entry["Alcoholpercentage"],
-                        Price = (decimal)entry["Price"],
-                        Name = (string)entry["Name"],
-                        Url = (string)entry["Url"],
-                        Description = (string)entry["Description"],
-                        Volume = (string)entry["Volume"],
-                        CountryEntity= db.Country.Select(x => x).FirstOrDefault(x => x.Name == (string)entry["Country"]),
-                        CategoryEntity = db.Category.Select(x => x).FirstOrDefault(x => x.Name == (string)entry["Category"]),
-                        BrandEntity = db.Brand.Select(x => x).FirstOrDefault(x => x.Name == (string)entry["Brand"])
-                        
-                        
-                    };
-                    db.Add(prod);
+                        Country temp = new Country {Name = (string) entry["Name"]};
+                        db.Add(temp);
+                    }
+
+                    foreach (var entry in data.SelectToken("$.Category"))
+                    {
+                        Category temp = new Category {Name = (string) entry["Name"]};
+                        db.Add(temp);
+                    }
+
+                    foreach (var entry in data.SelectToken("$.Brand"))
+                    {
+                        Brand temp = new Brand {Name = (string) entry["Name"]};
+                        db.Add(temp);
+                    }
+
+                    db.SaveChanges();
+                    foreach (var entry in data.SelectToken("$.Drank"))
+                    {
+                        Product prod = new Product
+                        {
+                            Alcoholpercentage = (decimal) entry["Alcoholpercentage"],
+                            Price = (decimal) entry["Price"],
+                            Name = (string) entry["Name"],
+                            Url = (string) entry["Url"],
+                            Description = (string) entry["Description"],
+                            Volume = (string) entry["Volume"],
+                            CountryEntity =
+                                db.Country.Select(x => x).FirstOrDefault(x => x.Name == (string) entry["Country"]),
+                            CategoryEntity = db.Category.Select(x => x)
+                                .FirstOrDefault(x => x.Name == (string) entry["Category"]),
+                            BrandEntity = db.Brand.Select(x => x).FirstOrDefault(x => x.Name == (string) entry["Brand"])
+
+
+                        };
+                        db.Add(prod);
+                    }
+
+                    db.SaveChanges();
                 }
-                db.SaveChanges();
             }
-            
+
         }
 
         /*public static void Initialize(IServiceProvider serviceProvider)
