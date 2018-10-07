@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace DrankReus_api
+namespace DrankReus_api.SeedData
 {
     public class SeedDatabase
     {
