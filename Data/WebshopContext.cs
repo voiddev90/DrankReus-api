@@ -1,7 +1,6 @@
 using System;
 using DrankReus_api.Models;
 using Microsoft.EntityFrameworkCore;
-using DrankReus_api.Models;
 
 namespace DrankReus_api.Data
 {
