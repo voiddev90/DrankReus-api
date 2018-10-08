@@ -29,6 +29,7 @@ namespace DrankReus_api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddDbContext<WebshopContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -46,7 +47,7 @@ namespace DrankReus_api
             }
             
             SeedDatabase.Initialize(app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
-            
+            app.UseCors(builder => builder.WithOrigins("*"));
             app.UseHttpsRedirection();
             app.UseMvc();
         }
