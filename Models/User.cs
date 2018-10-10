@@ -18,6 +18,8 @@ namespace DrankReus_api.Models
         [Required(ErrorMessage = "Voornaam is verplicht")]
         public string FirstName { get; set; }
 
+        public string prefix { get; set; }
+
         [Required(ErrorMessage = "Achternaam is verplicht")]
         public string LastName { get; set; }
 
