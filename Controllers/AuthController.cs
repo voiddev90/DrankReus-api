@@ -21,13 +21,31 @@ namespace DrankReus_api.Controllers
         [Route("register")]
         public ActionResult Register([FromBody] User newUser)
         {
-            bool userExists = db.Users.Any(u => u.Email == newUser.Email);
-            if(userExists) return StatusCode(409);
+            if(userExists(newUser.Email)) return StatusCode(409);
             newUser.HashPassword();
             newUser.Admin = false;
             db.Users.Add(newUser);
             db.SaveChanges();
             return StatusCode(201);
+        }
+
+        [HttpPost]
+        public ActionResult Login([FromBody] JObject loginDetails)
+        {
+            string email = loginDetails["email"].ToString();
+            string password = loginDetails["password"].ToString();
+            if(!userExists(email)) return StatusCode(409);
+
+            User registeredUser = db.Users.Where(u => u.Email == email).First();
+            
+            if(!registeredUser.PasswordMatch(password)) return StatusCode(409);
+            throw new NotImplementedException("Implement JWT return");
+        }
+
+        private bool userExists(string email)
+        {
+            bool userExists = db.Users.Any(u => u.Email == email);
+            return userExists;
         }
     }
 }
