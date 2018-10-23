@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using DrankReus_api.Models;
 using DrankReus_api.Data;
 using Newtonsoft.Json.Linq;
+using System.Text;
+using DrankReus_api.Helpers;
 
 namespace DrankReus_api.Controllers
 {
@@ -30,6 +32,7 @@ namespace DrankReus_api.Controllers
         }
 
         [HttpPost]
+        [Route("login")]
         public ActionResult Login([FromBody] JObject loginDetails)
         {
             string email = loginDetails["email"].ToString();
@@ -39,7 +42,7 @@ namespace DrankReus_api.Controllers
             User registeredUser = db.Users.Where(u => u.Email == email).First();
             
             if(!registeredUser.PasswordMatch(password)) return StatusCode(409);
-            throw new NotImplementedException("Implement JWT return");
+            return Ok(TokenHelper.generateToken(registeredUser, DateTime.Now.AddHours(1)));
         }
 
         private bool userExists(string email)

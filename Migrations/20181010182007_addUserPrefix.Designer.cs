@@ -118,7 +118,7 @@ namespace DrankReusapi.Migrations
 
                     b.Property<string>("Street");
 
-                    b.Property<string>("prefix");
+                    b.Property<string>("Prefix");
 
                     b.HasKey("Id");
 

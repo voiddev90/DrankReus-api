@@ -7,7 +7,7 @@ namespace DrankReusapi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "prefix",
+                name: "Prefix",
                 table: "Users",
                 nullable: true);
         }
@@ -15,7 +15,7 @@ namespace DrankReusapi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "prefix",
+                name: "Prefix",
                 table: "Users");
         }
     }
