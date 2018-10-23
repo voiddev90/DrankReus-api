@@ -18,7 +18,7 @@ namespace DrankReus_api.Models
         [Required(ErrorMessage = "Voornaam is verplicht")]
         public string FirstName { get; set; }
 
-        public string prefix { get; set; }
+        public string Prefix { get; set; }
 
         [Required(ErrorMessage = "Achternaam is verplicht")]
         public string LastName { get; set; }
@@ -53,6 +53,20 @@ namespace DrankReus_api.Models
         {
             if(this.Password == this.EncryptPassword(password)) return true;
             return false;
+        }
+
+        public object UserData()
+        {
+            return new {
+                    Email = this.Email,
+                    FirstName = this.FirstName,
+                    Prefix = this.Prefix,
+                    LastName = this.LastName,
+                    Steet = this.Street,
+                    BuildingNumber = this.BuildingNumber,
+                    PostalCode = this.PostalCode,
+                    Area = this.Area
+                };
         }
     }
 }
