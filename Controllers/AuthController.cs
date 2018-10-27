@@ -23,7 +23,7 @@ namespace DrankReus_api.Controllers
         [Route("register")]
         public ActionResult Register([FromBody] User newUser)
         {
-            if(userExists(newUser.Email)) return StatusCode(409);
+            if(userExists(newUser.Email)) return StatusCode(409, "User already exists.");
             newUser.HashPassword();
             newUser.Admin = false;
             db.Users.Add(newUser);
@@ -37,11 +37,11 @@ namespace DrankReus_api.Controllers
         {
             string email = loginDetails["email"].ToString();
             string password = loginDetails["password"].ToString();
-            if(!userExists(email)) return StatusCode(409);
+            if(!userExists(email)) return StatusCode(409, "User doesn't exists");
 
             User registeredUser = db.Users.Where(u => u.Email == email).First();
             
-            if(!registeredUser.PasswordMatch(password)) return StatusCode(409);
+            if(!registeredUser.PasswordMatch(password)) return StatusCode(409, "Wrong password");
             return Ok(TokenHelper.generateToken(registeredUser, DateTime.Now.AddHours(1)));
         }
 
