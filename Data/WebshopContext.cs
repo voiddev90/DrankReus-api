@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
 using DrankReus_api.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,5 +16,5 @@ namespace DrankReus_api.Data
     public DbSet<Category> Category { get; set; }
     public DbSet<Country> Country { get; set; }
     public DbSet<Brand> Brand{ get; set; }
-  }
-}
+
+}}
