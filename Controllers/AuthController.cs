@@ -8,11 +8,13 @@ using DrankReus_api.Data;
 using Newtonsoft.Json.Linq;
 using System.Text;
 using DrankReus_api.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DrankReus_api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
         private readonly WebshopContext db;
