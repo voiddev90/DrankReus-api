@@ -46,6 +46,7 @@ namespace DrankReus_api
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("N.2:*Xora#)3ty/&3G9j"))
                 };
             });
+            services.AddHttpContextAccessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
