@@ -53,7 +53,7 @@ namespace DrankReus_api.Controllers
             }).GetPage(page_index,page_size, m => m.Id));
         }
         [HttpGet]
-        [Route("Product/{id}")]
+        [Route("{id}")]
         public IActionResult GetProductById(int id){
             var res = from p in db.Product
                         where p.Id == id
