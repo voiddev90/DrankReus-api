@@ -6,15 +6,8 @@ using System.Linq;
 using DrankReus_api.Data;
 using DrankReus_api.Models;
 using ExtensionMethod;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Newtonsoft.Json.Linq;
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using DrankReus_api.SeedData;
-using System.Linq.Dynamic;
 
 namespace DrankReus_api.Controllers
 {
@@ -29,7 +22,7 @@ namespace DrankReus_api.Controllers
             db = context;
         }
         [HttpGet]
-        [Route("Products")]
+        [Route("")]
         public IActionResult GetFilteredProducts(
         [FromQuery(Name = "Country")]int[] Country,
         [FromQuery(Name = "Category")]int[] Category,
@@ -47,14 +40,33 @@ namespace DrankReus_api.Controllers
             if(Brand.Length != 0){
                 result = result.Where(m => Brand.Contains(m.BrandId.Value));
             }
-            return Ok(result.Select(m => m).GetPage(page_index,page_size, m => m.Id));
+            return Ok(result.Select(p => new {
+                p.Id,
+                p.Description,
+                p.Price,
+                p.Volume,
+                p.Url,
+                p.Alcoholpercentage,
+                p.CategoryEntity,
+                p.CountryEntity,
+                p.BrandEntity
+            }).GetPage(page_index,page_size, m => m.Id));
         }
         [HttpGet]
-        [Route("{table_name}")]
-        public IActionResult GetTableIdList(string table_name)
-        {
-            var tableList = db.GetType().GetProperty(table_name);
-            IEnumerable<dynamic> res = (IEnumerable<dynamic>)tableList.GetValue(db);
+        [Route("Product/{id}")]
+        public IActionResult GetProductById(int id){
+            var res = from p in db.Product
+                        where p.Id == id
+                        select new{
+                            p.Id,
+                            p.Description,
+                            p.Price,
+                            p.Volume,
+                            p.Url,
+                            p.Alcoholpercentage,
+                            p.CategoryEntity,
+                            p.CountryEntity,
+                            p.BrandEntity};
             return Ok(res);
         }
 
@@ -66,5 +78,8 @@ namespace DrankReus_api.Controllers
             if (res == null) return NotFound();
             return Ok(res);
         }
+    }
+    public class RefinedProduct{
+        public Product product { get; set; }
     }
 }
