@@ -22,7 +22,7 @@ namespace DrankReus_api.Controllers
         {
             System.Console.WriteLine(productAmounts);
             int[] ids = (from p in productAmounts
-                        select p.id).ToArray();
+                        select p.Id).ToArray();
 
             var products =
             (from p in db.Product
@@ -32,21 +32,21 @@ namespace DrankReus_api.Controllers
 
             foreach (var product in products)
             {
-                int amount = (from p in productAmounts where p.id == product.Id select p.amount).First();
+                int amount = (from p in productAmounts where p.Id == product.Id select p.Amount).First();
                 totalPrice += product.Price * amount;
             }
                             
             return Ok(new {
                 // products = products,
                 tax = Math.Round(totalPrice * 0.21m, 2, MidpointRounding.ToEven),
-                Grandtotal = totalPrice
+                grandtotal = totalPrice
             });
         }
     }
 
     public class IdAmount
     {
-        public int id { get; set; }
-        public int amount { get; set; }
+        public int Id { get; set; }
+        public int Amount { get; set; }
     }
 }
