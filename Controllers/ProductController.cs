@@ -41,6 +41,7 @@ namespace DrankReus_api.Controllers
                 result = result.Where(m => Brand.Contains(m.BrandId.Value));
             }
             return Ok(result.Select(p => new {
+                p.Name,
                 p.Id,
                 p.Description,
                 p.Price,
