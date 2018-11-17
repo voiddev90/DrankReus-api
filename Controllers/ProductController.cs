@@ -28,7 +28,8 @@ namespace DrankReus_api.Controllers
         [FromQuery(Name = "Category")]int[] Category,
         [FromQuery(Name = "Brand")]int[] Brand,
         [FromQuery(Name = "index")]int page_index,
-        [FromQuery(Name = "size")]int page_size)
+        [FromQuery(Name = "size")]int page_size,
+        [FromQuery(Name = "products")] int[] products)
         {
             var result = db.Product.Select(m => m);
             if(Country.Length != 0){
@@ -39,6 +40,9 @@ namespace DrankReus_api.Controllers
             }
             if(Brand.Length != 0){
                 result = result.Where(m => Brand.Contains(m.BrandId.Value));
+            }
+            if (products.Length != 0){
+                result = result.Where(p => products.Contains(p.Id));
             }
             return Ok(result.Select(p => new {
                 p.Name,
