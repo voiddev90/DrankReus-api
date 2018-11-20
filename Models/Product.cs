@@ -17,5 +17,6 @@
         public Brand BrandEntity { get; set; }
         public Category CategoryEntity { get; set; }
         public Country CountryEntity { get; set; }
+        public int Inventory { get;set;}
     }
 }

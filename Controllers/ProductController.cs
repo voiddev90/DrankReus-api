@@ -83,8 +83,29 @@ namespace DrankReus_api.Controllers
             if (res == null) return NotFound();
             return Ok(res);
         }
-    }
-    public class RefinedProduct{
-        public Product product { get; set; }
+        [HttpPut]
+        [Route("Purchased")]
+        public IActionResult ManageInventory(
+        [FromBody]int[] productIds)
+        {
+            Dictionary<int,int> productcount = new Dictionary<int, int>();
+            foreach (var i in productIds.GroupBy(x => x))
+            {
+                productcount.Add(i.Key,i.Count());
+            }
+            var result = (from p in db.Product
+            where productIds.Contains(p.Id)
+            select p).ToList();
+           foreach (var item in result)
+           {
+               int count;
+               productcount.TryGetValue(item.Id,out count);
+               item.Inventory = item.Inventory - count;
+           }
+            db.SaveChanges();
+            return Ok(201);
+        }
+
+        
     }
 }
