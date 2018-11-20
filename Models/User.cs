@@ -58,7 +58,7 @@ namespace DrankReus_api.Models
         public object UserData()
         {
             return new {
-		    Id = this.Id,
+                    Id = this.Id,
                     Email = this.Email,
                     FirstName = this.FirstName,
                     Prefix = this.Prefix,

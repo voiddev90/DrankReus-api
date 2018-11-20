@@ -60,9 +60,8 @@ namespace DrankReus_api.SeedData
                                 db.Country.Select(x => x).FirstOrDefault(x => x.Name == (string) entry["Country"]),
                             CategoryEntity = db.Category.Select(x => x)
                                 .FirstOrDefault(x => x.Name == (string) entry["Category"]),
-                            BrandEntity = db.Brand.Select(x => x).FirstOrDefault(x => x.Name == (string) entry["Brand"])
-
-
+                            BrandEntity = db.Brand.Select(x => x).FirstOrDefault(x => x.Name == (string) entry["Brand"]),
+                            Inventory = 1000
                         };
                         db.Add(prod);
                     }
