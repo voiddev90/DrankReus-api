@@ -16,5 +16,6 @@ namespace DrankReus_api.Data
     public DbSet<Category> Category { get; set; }
     public DbSet<Country> Country { get; set; }
     public DbSet<Brand> Brand{ get; set; }
+    public DbSet<Order> Orders { get; set; }
 
 }}
