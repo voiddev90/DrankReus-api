@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using DrankReus_api.Data;
 
 namespace DrankReus_api.Controllers
 {
@@ -15,12 +16,12 @@ namespace DrankReus_api.Controllers
       private readonly WebshopContext db;
       public OrderController(WebshopContext context) {db = context;}
 
-      [HttpGet]
-        public ActionResult Get()
-        {
-            // var user = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value; <--- TO GET THE EMAIL FROM THE USER THAT IS IN THE TOKEN
-            // return Ok(new String[] { "value1", "value2" });
-        }
+    //   [HttpGet]
+    //     public ActionResult Get()
+    //     {
+    //         // var user = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value; <--- TO GET THE EMAIL FROM THE USER THAT IS IN THE TOKEN
+    //         // return Ok(new String[] { "value1", "value2" });
+    //     }
 
         // GET api/values/5
         [HttpGet("{id}")]
