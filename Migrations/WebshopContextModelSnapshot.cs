@@ -77,6 +77,9 @@ namespace DrankReusapi.Migrations
 
                     b.Property<DateTime>("OrderDate");
 
+                    b.Property<string>("OrderStatus")
+                        .IsRequired();
+
                     b.Property<string>("PostalCode")
                         .IsRequired();
 
@@ -89,7 +92,7 @@ namespace DrankReusapi.Migrations
 
                     b.Property<string>("TrackCode");
 
-                    b.Property<int>("UserId");
+                    b.Property<int?>("UserId");
 
                     b.HasKey("Id");
 
@@ -192,8 +195,7 @@ namespace DrankReusapi.Migrations
                 {
                     b.HasOne("DrankReus_api.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("DrankReus_api.Models.OrderProduct", b =>

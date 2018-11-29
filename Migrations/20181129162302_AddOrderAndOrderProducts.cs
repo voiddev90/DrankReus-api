@@ -14,7 +14,8 @@ namespace DrankReusapi.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    UserId = table.Column<int>(nullable: false),
+                    UserId = table.Column<int>(nullable: true),
+                    OrderStatus = table.Column<string>(nullable: false),
                     OrderDate = table.Column<DateTime>(nullable: false),
                     TaxPercentage = table.Column<int>(nullable: false),
                     TrackCode = table.Column<string>(nullable: true),
@@ -35,7 +36,7 @@ namespace DrankReusapi.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(

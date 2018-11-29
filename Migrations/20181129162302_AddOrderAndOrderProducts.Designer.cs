@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DrankReusapi.Migrations
 {
     [DbContext(typeof(WebshopContext))]
-    [Migration("20181129112244_AddOrderAndOrderProducts")]
+    [Migration("20181129162302_AddOrderAndOrderProducts")]
     partial class AddOrderAndOrderProducts
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,6 +79,9 @@ namespace DrankReusapi.Migrations
 
                     b.Property<DateTime>("OrderDate");
 
+                    b.Property<string>("OrderStatus")
+                        .IsRequired();
+
                     b.Property<string>("PostalCode")
                         .IsRequired();
 
@@ -91,7 +94,7 @@ namespace DrankReusapi.Migrations
 
                     b.Property<string>("TrackCode");
 
-                    b.Property<int>("UserId");
+                    b.Property<int?>("UserId");
 
                     b.HasKey("Id");
 
@@ -194,8 +197,7 @@ namespace DrankReusapi.Migrations
                 {
                     b.HasOne("DrankReus_api.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("DrankReus_api.Models.OrderProduct", b =>

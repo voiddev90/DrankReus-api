@@ -10,9 +10,11 @@ namespace DrankReus_api.Models
     {
       public int Id { get; set; }
       
-      public int UserId { get; set; }
+      public int? UserId { get; set; }
       
       public User User { get; set; }
+
+      public OrderStatusEnum OrderStatus { get; set; }
       
       [Required]
       public DateTime OrderDate { get; set; }
@@ -46,5 +48,14 @@ namespace DrankReus_api.Models
       public string Area { get; set; }
       
       public List<OrderProduct> OrderProducts { get; set; }
+    }
+
+    public enum OrderStatusEnum
+    {
+      Ordered,
+      Paid,
+      Packaging,
+      Shipped,
+      Delivered
     }
 }
