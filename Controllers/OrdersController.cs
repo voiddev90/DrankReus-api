@@ -52,17 +52,26 @@ namespace DrankReus_api.Controllers
             order.Area = requestOrder.Area;
             order.OrderProducts = new List<OrderProduct>();
 
-            List<Product> products =
-            (from p in db.Product
-            where requestOrder.ProductIds.Contains(p.Id)
-            select p).ToList();
+            var productsAmount = (
+                from p in db.Product
+                from p_a in requestOrder.orderProductAmount
+                where p_a.ProductId == p.Id
+                select new {
+                    product = p,
+                    amount = p_a.Amount
+                }
+            ).ToArray();
 
-            foreach (Product product in products)
+
+            foreach (var productAmount in productsAmount)
             {
                 order.OrderProducts.Add(new OrderProduct(){
-                    Product = product,
-                    Price = product.Price
+                    Product = productAmount.product,
+                    Price = productAmount.product.Price,
+                    Amount = productAmount.amount
                 });
+                productAmount.product.Inventory -= productAmount.amount;
+                db.Update(productAmount.product);
             }
 
             db.Add(order);
@@ -112,6 +121,12 @@ namespace DrankReus_api.Controllers
         [Required]
         public string Area { get; set; }
         [Required]
-        public int[] ProductIds { get; set; }
+        public orderProductAmount[] orderProductAmount { get; set; }
+    }
+
+    public class orderProductAmount
+    {
+        public int ProductId { get; set; }
+        public int Amount { get; set; }
     }
 }
