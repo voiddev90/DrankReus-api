@@ -19,18 +19,54 @@ namespace DrankReus_api.Controllers
       private readonly WebshopContext db;
       public OrdersController(WebshopContext context) {db = context;}
 
-        // [HttpGet]
-        // public ActionResult Get()
-        // {
-        //     // var user = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value; <--- TO GET THE EMAIL FROM THE USER THAT IS IN THE TOKEN
-        //     // return Ok(new String[] { "value1", "value2" });
-        // }
+        [Authorize]
+        [HttpGet]
+        public ActionResult GetOrders()
+        {
+            User user = GetClaimUser();
+            var orders = (from o in db.Orders
+                        let orderProduct = (
+                            from p in db.Product
+                            from o_p in db.OrderProducts
+                            where o_p.ProductId == p.Id && o.Id == o_p.OrderId
+                            select new {
+                                product = p,
+                                price = o_p.Price,
+                                amount = o_p.Amount
+                            }
+                        ).ToArray()
+                        where o.UserId == user.Id || user.Admin == true
+                        orderby o.Id descending
+                        select new {
+                            order = o.filterUser(),
+                            orderProduct = orderProduct
+                        }).ToArray();
+            return Ok(orders);
+        }
 
         // GET api/values/5
+        [Authorize]
         [HttpGet("{id}")]
-        public ActionResult<string> GetOrder(int id)
+        public ActionResult GetOrder(int id)
         {
-            return "value";
+            User user = GetClaimUser();
+            var order = (from o in db.Orders
+                        let orderProduct = (
+                            from p in db.Product
+                            from o_p in db.OrderProducts
+                            where o_p.ProductId == p.Id && o.Id == o_p.OrderId
+                            select new {
+                                product = p,
+                                price = o_p.Price,
+                                amount = o_p.Amount
+                            }
+                        ).ToArray()
+                        where o.Id == id && (o.UserId == user.Id || user.Admin == true)
+                        select new {
+                            order = o.filterUser(),
+                            orderProduct = orderProduct
+                        }).ToArray();
+            return Ok(order);
         }
 
         // POST api/values
@@ -45,7 +81,7 @@ namespace DrankReus_api.Controllers
             }
             Order order = new Order();
             order.OrderStatus = OrderStatusEnum.Ordered;
-            order.OrderDate = new DateTime();
+            order.OrderDate = DateTime.Now;
             order.TaxPercentage = 21;
             order.Email = requestOrder.Email;
             order.FirstName = requestOrder.FirstName;

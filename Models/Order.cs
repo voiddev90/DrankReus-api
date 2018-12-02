@@ -48,6 +48,24 @@ namespace DrankReus_api.Models
       public string Area { get; set; }
       
       public List<OrderProduct> OrderProducts { get; set; }
+
+      public object filterUser()
+      {
+        return new {
+          Id = this.Id,
+          OrderStatus = this.OrderStatus,
+          OrderDate = this.OrderDate,
+          TaxPercentage = this.TaxPercentage,
+          TrackCode = this.TrackCode,
+          Email = this.Email,
+          FirstName = this.FirstName,
+          LastName = this.LastName,
+          Street = this.Street,
+          BuildingNumber = this.BuildingNumber,
+          PostalCode = this.PostalCode,
+          Area = this.Area
+        };
+      }
     }
 
     public enum OrderStatusEnum
