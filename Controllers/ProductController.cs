@@ -29,7 +29,10 @@ namespace DrankReus_api.Controllers
         [FromQuery(Name = "Brand")]int[] Brand,
         [FromQuery(Name = "index")]int page_index,
         [FromQuery(Name = "size")]int page_size,
-        [FromQuery(Name = "products")] int[] products)
+        [FromQuery(Name = "products")] int[] products,
+        [FromQuery(Name = "Percentage")] int[] Percentage,
+        [FromQuery(Name = "Price")] int[] price,
+        [FromQuery(Name = "Ascending")] bool ascending)
         {
             var result = db.Product.Select(m => m);
             if(Country.Length != 0){
@@ -44,6 +47,12 @@ namespace DrankReus_api.Controllers
             if (products.Length != 0){
                 result = result.Where(p => products.Contains(p.Id));
             }
+            if(price.Length != 0){
+                result = result.Where(p => p.Price >= price[0] && p.Price <= price[1]);
+            }
+            if(Percentage.Length != 0){
+                result = result.Where(p => p.Alcoholpercentage >= Percentage[0] && p.Alcoholpercentage <= Percentage[1]);
+            }
             return Ok(result.Select(p => new {
                 p.Name,
                 p.Id,
@@ -55,7 +64,7 @@ namespace DrankReus_api.Controllers
                 p.CategoryEntity,
                 p.CountryEntity,
                 p.BrandEntity
-            }).GetPage(page_index,page_size, m => m.Id));
+            }).GetPage(page_index,page_size, m=> m.Price, ascending));
         }
         [HttpGet]
         [Route("{id}")]
@@ -75,14 +84,6 @@ namespace DrankReus_api.Controllers
             return Ok(res);
         }
 
-        [HttpGet]
-        [Route("GetPages/{page_index}/{page_size}")]
-        public IActionResult GetPageCount(int page_index, int page_size)
-        {
-            var res = db.Product.GetPage(page_index, page_size, a => a);
-            if (res == null) return NotFound();
-            return Ok(res);
-        }
         [HttpPut]
         [Route("Purchased")]
         public IActionResult ManageInventory(
@@ -106,6 +107,24 @@ namespace DrankReus_api.Controllers
             return Ok(201);
         }
 
-        
+        [HttpGet]
+        [Route("Test")]
+        public IActionResult GetPossibleIds(
+        [FromQuery(Name = "Product")]int[] Products){
+            var Brand  = db.Product.Where(m => Products.Contains(m.Id))
+            .GroupBy(x => x.BrandEntity)
+            .Select(m => new {
+                Key = m.Key.Id,
+                val = m.Count()
+            }).Distinct();
+
+            var Country  = db.Product.Where(m => Products.Contains(m.Id))
+            .GroupBy(x => x.CountryEntity)
+            .Select(m => new {
+                Key = m.Key.Id,
+                val = m.Count()
+            }).Distinct();
+            return Ok((Brand,Country));
+        }
     }
 }

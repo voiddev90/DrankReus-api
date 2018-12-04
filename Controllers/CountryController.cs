@@ -14,7 +14,15 @@ namespace DrankReus_api.Controllers
         }
         [HttpGet]
         [Route("")]
-        public IActionResult GetTableData(){
+        public IActionResult GetTableData(
+        [FromQuery(Name = "Country")]int[] Ids
+        ){
+            var result = db.Country.Select(m => m);
+            if(Ids.Length != 0){
+                result = result.Where(m => Ids.Contains(m.Id));
+                return Ok(result);
+            }
+            else
             return Ok(db.Country.Select(m => m));
         }
     }
