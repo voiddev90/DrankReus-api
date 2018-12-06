@@ -16,5 +16,19 @@ namespace DrankReus_api.Data
     public DbSet<Category> Category { get; set; }
     public DbSet<Country> Country { get; set; }
     public DbSet<Brand> Brand{ get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderProduct> OrderProducts { get; set; }
 
-}}
+    protected override void OnModelCreating(ModelBuilder ModelBuilder)
+    {
+      ModelBuilder
+      .Entity<Order>()
+      .Property(o => o.OrderStatus)
+      .HasConversion(
+        v => v.ToString(),
+        v => (OrderStatusEnum)Enum.Parse(typeof(OrderStatusEnum), v)
+      );
+    }
+
+  }
+}
