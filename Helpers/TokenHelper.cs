@@ -4,6 +4,8 @@ using System.Security.Claims;
 using System.Text;
 using DrankReus_api.Models;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace DrankReus_api.Helpers
 {
