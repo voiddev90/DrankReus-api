@@ -17,7 +17,8 @@ namespace DrankReus_api.Controllers
     {
 
       private readonly WebshopContext db;
-      public OrdersController(WebshopContext context) {db = context;}
+      private readonly int discountPercentage = 10;
+      public OrdersController(WebshopContext context){db = context;}
 
         [Authorize]
         [HttpGet]
@@ -44,7 +45,6 @@ namespace DrankReus_api.Controllers
             return Ok(orders);
         }
 
-        // GET api/values/5
         [Authorize]
         [HttpGet("{id}")]
         public ActionResult GetOrder(int id)
@@ -69,7 +69,6 @@ namespace DrankReus_api.Controllers
             return Ok(order);
         }
 
-        // POST api/values
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult> Post([FromBody] OrderProducts requestOrder)
@@ -115,10 +114,6 @@ namespace DrankReus_api.Controllers
                 db.Update(productAmount.product);
             }
 
-
-
-            
-
             User user = GetClaimUser();
             if(user != null)
             {
@@ -129,8 +124,17 @@ namespace DrankReus_api.Controllers
                     user.BuildingNumber = requestOrder.BuildingNumber;
                     user.PostalCode = requestOrder.PostalCode;
                     user.Area = requestOrder.Area;
-                    db.Update(user);
                 }
+                if(user.DiscountPoints == 10)
+                {
+                    order.DiscountPercentage = this.discountPercentage;
+                    user.DiscountPoints = 0;
+                }
+                else
+                {
+                    user.DiscountPoints++;
+                }
+                db.Update(user);
             }
 
             db.Add(order);

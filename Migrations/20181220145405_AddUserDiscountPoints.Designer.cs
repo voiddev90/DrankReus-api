@@ -3,15 +3,17 @@ using System;
 using DrankReus_api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DrankReusapi.Migrations
 {
     [DbContext(typeof(WebshopContext))]
-    partial class WebshopContextModelSnapshot : ModelSnapshot
+    [Migration("20181220145405_AddUserDiscountPoints")]
+    partial class AddUserDiscountPoints
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,10 +67,6 @@ namespace DrankReusapi.Migrations
 
                     b.Property<string>("BuildingNumber")
                         .IsRequired();
-
-                    b.Property<int>("DiscountPercentage")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(0);
 
                     b.Property<string>("Email")
                         .IsRequired();
