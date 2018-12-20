@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using DrankReus_api.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using DrankReus_api.Helpers;
 
 namespace DrankReus_api.Controllers
 {
@@ -22,37 +23,36 @@ namespace DrankReus_api.Controllers
     [AllowAnonymous]
     public ActionResult Post([FromBody] IdAmount[] productAmounts)
     {
-      System.Console.WriteLine(productAmounts);
-      int[] ids = (from p in productAmounts
-                   select p.Id).ToArray();
-
-      var products =
-      (from p in db.Product
-       where ids.Contains(p.Id)
-       select p).ToList();
-      decimal totalPrice = 0.00m;
-
-      foreach (var product in products)
-      {
-        int amount = (from p in productAmounts where p.Id == product.Id select p.Amount).First();
-        totalPrice += Math.Round(product.Price * amount, 2, MidpointRounding.ToEven);
-      }
 
       User user = GetClaimUser();
-      decimal discountAmount = 0.00m;
+      var products =
+      (from p in db.Product
+       from pa in productAmounts
+       where pa.Id == p.Id
+       select new ProductAmountPrice()
+       {
+         ProductInfo = p,
+         Amount = pa.Amount
+       }).ToArray();
+
+      ProductCalc pricing;
       if (user != null && user.DiscountPoints == 10)
       {
-          discountAmount = Math.Round(((this.discountPercentage / 100m) * totalPrice), 2, MidpointRounding.ToEven);
+        pricing = new ProductCalc(discountPercentage);
       }
+      else
+      {
+        pricing = new ProductCalc(0.00m);
+      }
+      pricing.calcPrice(products);
 
-        return Ok(new
-        {
-          // products = products,
-          tax = Math.Round((totalPrice - discountAmount) * 0.21m, 2, MidpointRounding.ToEven),
-          discountAmount = discountAmount,
-          totalPrice = totalPrice,
-          grandtotal = totalPrice - discountAmount
-        });
+      return Ok(new {
+        discountAmount = pricing.DiscountAmount,
+        discountPercentage = pricing.DiscountPercentage,
+        tax = pricing.Tax,
+        totalPrice = pricing.TotalPrice,
+        grandTotal = pricing.GrandTotal
+      });
 
 
     }
