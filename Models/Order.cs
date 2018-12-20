@@ -22,6 +22,8 @@ namespace DrankReus_api.Models
       [Required]
       public int TaxPercentage { get; set; }
       
+      public int DiscountPercentage { get; set; }
+      
       public string TrackCode { get; set; }
 
       [Required]
