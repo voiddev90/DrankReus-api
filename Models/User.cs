@@ -66,7 +66,8 @@ namespace DrankReus_api.Models
                     Steet = this.Street,
                     BuildingNumber = this.BuildingNumber,
                     PostalCode = this.PostalCode,
-                    Area = this.Area
+                    Area = this.Area,
+                    Admin = this.Admin
                 };
         }
     }
