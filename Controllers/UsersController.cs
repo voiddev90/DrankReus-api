@@ -25,12 +25,14 @@ namespace DrankReus_api.Controllers
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
-            User user = GetClaimUser(id);
-            if(user == null)
+            User currentUser = GetClaimUser();
+
+            if(currentUser != null && (currentUser.Admin || currentUser.Id == id))
             {
-                return Unauthorized();
+                User requestedUser = db.Users.Find(id);
+                return Ok(requestedUser.UserData());
             }
-            return Ok(user.UserData());
+            return Unauthorized();
         }
 
         // POST api/users
@@ -75,10 +77,10 @@ namespace DrankReus_api.Controllers
             return userExists;
         }
 
-        private User GetClaimUser(int requestId)
+        private User GetClaimUser()
         {
             string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
-            return (from u in db.Users where u.Email == claimEmail && u.Id == requestId select u).FirstOrDefault();
+            return (from u in db.Users where u.Email == claimEmail select u).FirstOrDefault();
         }
     }
 }
