@@ -34,6 +34,7 @@ namespace DrankReus_api.Controllers
         [FromQuery(Name = "products")] int[] products)
         {
             var result = db.Product.Select(m => m);
+            result.Select(m => m.Removed == false);
             if(Country.Length != 0){
                 result = result.Where(m => Country.Contains(m.CountryId.Value));
             }
@@ -64,6 +65,7 @@ namespace DrankReus_api.Controllers
         public IActionResult GetProductById(int id){
             var res = from p in db.Product
                         where p.Id == id
+                        where p.Removed == false
                         select new{
                             p.Id,
                             p.Description,
@@ -85,6 +87,19 @@ namespace DrankReus_api.Controllers
             if (res == null) return NotFound();
             return Ok(res);
         }
+
+        [HttpPost, Authorize(Roles = "Admin")]
+        public async Task<ActionResult> AddProduct([FromBody] Product newProduct)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            await db.Product.AddAsync(newProduct);
+            await db.SaveChangesAsync();
+            return CreatedAtAction("GetProductById", new {id = newProduct.Id}, newProduct);
+        }
+        
 
         [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateProduct(int id, Product updateInfo)
@@ -109,6 +124,20 @@ namespace DrankReus_api.Controllers
             product.Url = updateInfo.Url;
             product.Inventory = updateInfo.Inventory;
             
+            db.Product.Update(product);
+            await db.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult> RemoveProduct(int id)
+        {
+            Product product = await db.Product.FindAsync(id);
+            if(product == null || product.Removed)
+            {
+                return NotFound();
+            }
+            product.Removed = true;
             db.Product.Update(product);
             await db.SaveChangesAsync();
             return Ok();
