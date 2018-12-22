@@ -36,27 +36,6 @@ namespace DrankReus_api.Models
         [Required(ErrorMessage = "Admin is niet gezet")]
         public bool Admin { get; set; } = false;
 
-        public void HashPassword()
-        {
-            this.Password = this.EncryptPassword(this.Password);
-        }
-
-        private string EncryptPassword(string password)
-        {
-            using(MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
-            {
-                UTF8Encoding utf8 = new UTF8Encoding();
-                byte[] data = md5.ComputeHash(utf8.GetBytes(password));
-                return Convert.ToBase64String(data);
-            }
-        }
-
-        public bool PasswordMatch(string password)
-        {
-            if(this.Password == this.EncryptPassword(password)) return true;
-            return false;
-        }
-
         public object UserData()
         {
             return new {
