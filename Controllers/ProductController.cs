@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using DrankReus_api.Data;
 using DrankReus_api.Models;
 using ExtensionMethod;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -82,6 +84,34 @@ namespace DrankReus_api.Controllers
             var res = db.Product.GetPage(page_index, page_size, a => a);
             if (res == null) return NotFound();
             return Ok(res);
+        }
+
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult> UpdateProduct(int id, Product updateInfo)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            Product product = await db.Product.FindAsync(id);
+            if(product == null)
+            {
+                return NotFound();
+            }
+            product.CategoryId = updateInfo.CategoryId;
+            product.CountryId = updateInfo.CountryId;
+            product.BrandId = updateInfo.BrandId;
+            product.Name = updateInfo.Name;
+            product.Description = updateInfo.Description;
+            product.Price = updateInfo.Price;
+            product.Volume = updateInfo.Volume;
+            product.Alcoholpercentage = updateInfo.Alcoholpercentage;
+            product.Url = updateInfo.Url;
+            product.Inventory = updateInfo.Inventory;
+            
+            db.Product.Update(product);
+            await db.SaveChangesAsync();
+            return Ok();
         }
     }
 }
