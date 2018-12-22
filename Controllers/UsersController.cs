@@ -52,6 +52,10 @@ namespace DrankReus_api.Controllers
             if (currentUser != null && (currentUser.Admin || currentUser.Id == id))
             {
                 User requestedUser = db.Users.Find(id);
+                if(requestedUser == null || requestedUser.Removed)
+                {
+                    return NotFound();
+                }
                 return Ok(requestedUser.UserData());
             }
             return Unauthorized();
@@ -75,7 +79,8 @@ namespace DrankReus_api.Controllers
                 PostalCode = newUserInfo.PostalCode,
                 Area = newUserInfo.Area,
                 DiscountPoints = 0,
-                Admin = false
+                Admin = false,
+                Removed = false
             };
             User currentUser = GetClaimUser();
             if (currentUser != null && currentUser.Admin)
@@ -98,7 +103,7 @@ namespace DrankReus_api.Controllers
             string password = loginDetails["password"].ToString();
             if (!userExists(email)) return StatusCode(409, "Gebruiker bestaat niet");
 
-            User registeredUser = db.Users.Where(u => u.Email == email).First();
+            User registeredUser = db.Users.Where(u => u.Email == email && u.Removed == false).First();
 
             if (!UserHelper.PasswordMatch(registeredUser.Password, password)) return StatusCode(409, "Verkeerd wachtwoord");
             return Ok(TokenHelper.generateToken(registeredUser, DateTime.Now.AddHours(1)));
@@ -152,18 +157,19 @@ namespace DrankReus_api.Controllers
         public async Task<ActionResult> RemoveUser(int id)
         {
             User user = await db.Users.FindAsync(id);
-            if (user == null)
+            if (user == null || user.Removed)
             {
                 return NotFound();
             }
-            db.Users.Remove(user);
+            user.Removed = true;
+            db.Users.Update(user);
             await db.SaveChangesAsync();
             return Ok();
         }
 
         private bool userExists(string email)
         {
-            bool userExists = db.Users.Any(u => u.Email == email);
+            bool userExists = db.Users.Any(u => u.Email == email && u.Removed == false);
             return userExists;
         }
 

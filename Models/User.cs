@@ -36,6 +36,8 @@ namespace DrankReus_api.Models
         [Required(ErrorMessage = "Admin is niet gezet")]
         public bool Admin { get; set; } = false;
 
+        public bool Removed { get; set; } = false;
+
         public object UserData()
         {
             return new {

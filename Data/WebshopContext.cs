@@ -37,6 +37,14 @@ namespace DrankReus_api.Data
       ModelBuilder.Entity<Order>()
       .Property(o => o.DiscountPercentage)
       .HasDefaultValue(0);
+
+      ModelBuilder.Entity<Product>()
+      .Property(p => p.Removed)
+      .HasDefaultValue(false);
+
+      ModelBuilder.Entity<User>()
+      .Property(p => p.Removed)
+      .HasDefaultValue(false);
     }
 
   }
