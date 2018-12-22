@@ -24,7 +24,7 @@ namespace DrankReus_api.Controllers
             db = context;
         }
         [HttpGet]
-        [Route("")]
+        // [Route("")]
         public IActionResult GetFilteredProducts(
         [FromQuery(Name = "Country")]int[] Country,
         [FromQuery(Name = "Category")]int[] Category,
@@ -33,8 +33,7 @@ namespace DrankReus_api.Controllers
         [FromQuery(Name = "size")]int page_size,
         [FromQuery(Name = "products")] int[] products)
         {
-            var result = db.Product.Select(m => m);
-            result.Select(m => m.Removed == false);
+            var result = db.Product.Select(m => m);            
             if(Country.Length != 0){
                 result = result.Where(m => Country.Contains(m.CountryId.Value));
             }
@@ -47,6 +46,7 @@ namespace DrankReus_api.Controllers
             if (products.Length != 0){
                 result = result.Where(p => products.Contains(p.Id));
             }
+            result = result.Where(p => p.Removed == false);
             return Ok(result.Select(p => new {
                 p.Name,
                 p.Id,
@@ -57,9 +57,10 @@ namespace DrankReus_api.Controllers
                 p.Alcoholpercentage,
                 p.CategoryEntity,
                 p.CountryEntity,
-                p.BrandEntity
+                p.Removed
             }).GetPage(page_index,page_size, m => m.Id));
         }
+
         [HttpGet]
         [Route("{id}")]
         public IActionResult GetProductById(int id){
