@@ -7,6 +7,7 @@ using DrankReus_api.Data;
 using DrankReus_api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace DrankReus_api.Controllers
 {
@@ -32,17 +33,17 @@ namespace DrankReus_api.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] int productId)
+        public ActionResult Post([FromBody] NewWish newWish)
         {
             User user = GetClaimUser();
-            bool productExists = db.Product.Any(x => x.Id == productId);
-            bool wishExists = db.Whishlists.Any(x => x.UserId == user.Id && x.ProductId == productId);
+            bool productExists = db.Product.Any(x => x.Id == newWish.id);
+            bool wishExists = db.Whishlists.Any(x => x.UserId == user.Id && x.ProductId == newWish.id);
             if(productExists && !wishExists)
             {
                 Whishlist wish = new Whishlist()
                 {
                     UserId = user.Id,
-                    ProductId = productId
+                    ProductId = newWish.id
                 };
                 db.Add(wish);
                 db.SaveChanges();
@@ -71,5 +72,10 @@ namespace DrankReus_api.Controllers
             string claimEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
             return (from u in db.Users where u.Email == claimEmail select u).FirstOrDefault();
         }
+    }
+
+    public class NewWish
+    {
+        public int id { get; set; }
     }
 }
