@@ -86,19 +86,9 @@ namespace DrankReus_api.Controllers
       var res = from p in db.Product
                 where p.Id == id
                 where p.Removed == false
-                select new
-                {
-                  p.Id,
-                  p.Description,
-                  p.Price,
-                  p.Volume,
-                  p.Url,
-                  p.Alcoholpercentage,
-                  p.CategoryEntity,
-                  p.CountryEntity,
-                  p.BrandEntity
-                };
-      return Ok(res);
+                select p;
+      if (res == null) return NotFound();
+      return Ok(res.First());
     }
 
     [HttpGet]
