@@ -31,7 +31,7 @@ namespace DrankReus_api.Controllers
                              Email = u.Email,
                              FirstName = u.FirstName,
                              Prefix = u.Prefix,
-                             LastName = u.Prefix,
+                             LastName = u.LastName,
                              Street = u.Street,
                              BuildingNumber = u.BuildingNumber,
                              PostalCode = u.PostalCode,
