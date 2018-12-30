@@ -131,7 +131,7 @@ namespace DrankReus_api.Controllers
                 {
                     user.Password = UserHelper.HashPassword(userInformation.Password);
                 }
-                user.FirstName = userInformation.Email;
+                user.FirstName = userInformation.FirstName;
                 user.Prefix = userInformation.Prefix;
                 user.LastName = userInformation.LastName;
                 user.Street = userInformation.Street;
