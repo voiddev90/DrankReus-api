@@ -46,7 +46,7 @@ namespace DrankReus_api.Models
                     FirstName = this.FirstName,
                     Prefix = this.Prefix,
                     LastName = this.LastName,
-                    Steet = this.Street,
+                    Street = this.Street,
                     BuildingNumber = this.BuildingNumber,
                     PostalCode = this.PostalCode,
                     Area = this.Area,
