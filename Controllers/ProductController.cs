@@ -75,7 +75,8 @@ namespace DrankReus_api.Controllers
                 p.CategoryEntity,
                 p.CountryEntity,
                 p.BrandEntity,
-                p.Removed
+                p.Removed,
+                p.Inventory
             }).GetPage(page_index, page_size, m => m.Price, ascending));
         }
 
@@ -98,7 +99,8 @@ namespace DrankReus_api.Controllers
                                  p.CategoryEntity,
                                  p.CountryEntity,
                                  p.BrandEntity,
-                                 p.Removed
+                                 p.Removed,
+                                 p.Inventory
                              }).FirstAsync();
             if (res == null) return NotFound();
             return Ok(res);
