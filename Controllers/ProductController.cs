@@ -35,6 +35,7 @@ namespace DrankReus_api.Controllers
         [FromQuery(Name = "Percentage")] int[] Percentage,
         [FromQuery(Name = "Price")] int[] price,
         [FromQuery(Name = "Ascending")] bool ascending)
+        
 
         {
             var result = db.Product.Select(m => m);
@@ -169,5 +170,24 @@ namespace DrankReus_api.Controllers
             await db.SaveChangesAsync();
             return Ok();
         }
-    }
-}
+        
+        [HttpGet("Search")]
+        public IActionResult GetSearchedProducts(
+        [FromQuery(Name = "Products")]string Products,
+        [FromQuery(Name = "index")]int page_index,
+        [FromQuery(Name = "size")]int page_size
+        ){
+            var res = 
+            (from p in db.Product
+            where p.Name.ToLower().Contains(Products.ToLower())
+            select p);
+
+            if(Products == null || res.ToArray().Length <= 0){
+                return NotFound();
+            }
+
+            return Ok(res.GetPage(page_index, page_size, m => m.Price, true));
+        }
+        
+
+    }}
