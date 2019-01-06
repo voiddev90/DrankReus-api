@@ -5,6 +5,7 @@ using DrankReus_api.Models;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DrankReus_api.Controllers
 {
@@ -15,8 +16,8 @@ namespace DrankReus_api.Controllers
         public StatsController(WebshopContext context) {this.db = context;}
 
 
-        [HttpGet, Route("products")]
-        public async Task<ActionResult> getSoldProducts([FromQuery(Name = "month")] int month, [FromQuery(Name = "year")] int year)
+        [HttpGet, Route("products"), Authorize(Roles="Admin")]
+        public ActionResult getSoldProducts([FromQuery(Name = "month")] int month, [FromQuery(Name = "year")] int year)
         {
             var soldProducts = (from o in db.Orders
                           from o_p in db.OrderProducts
