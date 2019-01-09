@@ -111,7 +111,7 @@ namespace DrankReus_api.Controllers
         [Route("GetPages/{page_index}/{page_size}")]
         public IActionResult GetPageCount(int page_index, int page_size)
         {
-            var res = db.Product.GetPage(page_index, page_size, a => a);
+            var res = db.Product.GetPage(page_index, page_size, a => a, true);
             if (res == null) return NotFound();
             return Ok(res);
         }
