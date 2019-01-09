@@ -55,15 +55,6 @@ namespace DrankReus_api.Controllers
             {
                 result = result.Where(p => products.Contains(p.Id));
             }
-<<<<<<< HEAD
-            if(price.Length != 0){
-                result = result.Where(p => p.Price >= price[0] && p.Price <= price[1]);
-            }
-            if(Percentage.Length != 0){
-                result = result.Where(p => p.Alcoholpercentage >= Percentage[0] && p.Alcoholpercentage <= Percentage[1]);
-            }
-            return Ok(result.Select(p => new {
-=======
             if (price.Length != 0)
             {
                 result = result.Where(p => p.Price >= price[0] && p.Price <= price[1]);
@@ -75,7 +66,6 @@ namespace DrankReus_api.Controllers
             result = result.Where(p => p.Removed == false);
             return Ok(result.Select(p => new
             {
->>>>>>> dev
                 p.Name,
                 p.Id,
                 p.Description,
@@ -85,15 +75,10 @@ namespace DrankReus_api.Controllers
                 p.Alcoholpercentage,
                 p.CategoryEntity,
                 p.CountryEntity,
-<<<<<<< HEAD
-                p.BrandEntity
-            }).GetPage(page_index,page_size, m=> m.Price, ascending));
-=======
                 p.BrandEntity,
                 p.Removed,
                 p.Inventory
             }).GetPage(page_index, page_size, m => m.Price, ascending));
->>>>>>> dev
         }
 
         [HttpGet]
@@ -122,12 +107,6 @@ namespace DrankReus_api.Controllers
             return Ok(res);
         }
 
-<<<<<<< HEAD
-        [HttpPut]
-        [Route("Purchased")]
-        public IActionResult ManageInventory(
-        [FromBody]int[] productIds)
-=======
         [HttpGet]
         [Route("GetPages/{page_index}/{page_size}")]
         public IActionResult GetPageCount(int page_index, int page_size)
@@ -139,7 +118,6 @@ namespace DrankReus_api.Controllers
 
         [HttpPost, Authorize(Roles = "Admin")]
         public async Task<ActionResult> AddProduct([FromBody] Product newProduct)
->>>>>>> dev
         {
             if (!ModelState.IsValid)
             {
@@ -150,29 +128,6 @@ namespace DrankReus_api.Controllers
             return CreatedAtAction("GetProductById", new { id = newProduct.Id }, newProduct);
         }
 
-<<<<<<< HEAD
-        [HttpGet]
-        [Route("Test")]
-        public IActionResult GetPossibleIds(
-        [FromQuery(Name = "Product")]int[] Products){
-            var Brand  = db.Product.Where(m => Products.Contains(m.Id))
-            .GroupBy(x => x.BrandEntity)
-            .Select(m => new {
-                Key = m.Key.Id,
-                val = m.Count()
-            }).Distinct();
-
-            var Country  = db.Product.Where(m => Products.Contains(m.Id))
-            .GroupBy(x => x.CountryEntity)
-            .Select(m => new {
-                Key = m.Key.Id,
-                val = m.Count()
-            }).Distinct();
-            return Ok((Brand,Country));
-        }
-    }
-}
-=======
 
         [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateProduct(int id, Product updateInfo)
@@ -236,4 +191,3 @@ namespace DrankReus_api.Controllers
         
 
     }}
->>>>>>> dev
