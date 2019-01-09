@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using DrankReus_api.Data;
 using DrankReus_api.Models;
 using ExtensionMethod;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +24,7 @@ namespace DrankReus_api.Controllers
             db = context;
         }
         [HttpGet]
-        [Route("")]
+        // [Route("")]
         public IActionResult GetFilteredProducts(
         [FromQuery(Name = "Country")]int[] Country,
         [FromQuery(Name = "Category")]int[] Category,
@@ -33,20 +35,27 @@ namespace DrankReus_api.Controllers
         [FromQuery(Name = "Percentage")] int[] Percentage,
         [FromQuery(Name = "Price")] int[] price,
         [FromQuery(Name = "Ascending")] bool ascending)
+        
+
         {
             var result = db.Product.Select(m => m);
-            if(Country.Length != 0){
+            if (Country.Length != 0)
+            {
                 result = result.Where(m => Country.Contains(m.CountryId.Value));
             }
-             if(Category.Length != 0){
+            if (Category.Length != 0)
+            {
                 result = result.Where(m => Category.Contains(m.CategoryId.Value));
             }
-            if(Brand.Length != 0){
+            if (Brand.Length != 0)
+            {
                 result = result.Where(m => Brand.Contains(m.BrandId.Value));
             }
-            if (products.Length != 0){
+            if (products.Length != 0)
+            {
                 result = result.Where(p => products.Contains(p.Id));
             }
+<<<<<<< HEAD
             if(price.Length != 0){
                 result = result.Where(p => p.Price >= price[0] && p.Price <= price[1]);
             }
@@ -54,6 +63,19 @@ namespace DrankReus_api.Controllers
                 result = result.Where(p => p.Alcoholpercentage >= Percentage[0] && p.Alcoholpercentage <= Percentage[1]);
             }
             return Ok(result.Select(p => new {
+=======
+            if (price.Length != 0)
+            {
+                result = result.Where(p => p.Price >= price[0] && p.Price <= price[1]);
+            }
+            if (Percentage.Length != 0)
+            {
+                result = result.Where(p => p.Alcoholpercentage >= Percentage[0] && p.Alcoholpercentage <= Percentage[1]);
+            }
+            result = result.Where(p => p.Removed == false);
+            return Ok(result.Select(p => new
+            {
+>>>>>>> dev
                 p.Name,
                 p.Id,
                 p.Description,
@@ -63,50 +85,72 @@ namespace DrankReus_api.Controllers
                 p.Alcoholpercentage,
                 p.CategoryEntity,
                 p.CountryEntity,
+<<<<<<< HEAD
                 p.BrandEntity
             }).GetPage(page_index,page_size, m=> m.Price, ascending));
+=======
+                p.BrandEntity,
+                p.Removed,
+                p.Inventory
+            }).GetPage(page_index, page_size, m => m.Price, ascending));
+>>>>>>> dev
         }
+
         [HttpGet]
         [Route("{id}")]
-        public IActionResult GetProductById(int id){
-            var res = from p in db.Product
-                        where p.Id == id
-                        select new{
-                            p.Id,
-                            p.Description,
-                            p.Price,
-                            p.Volume,
-                            p.Url,
-                            p.Alcoholpercentage,
-                            p.CategoryEntity,
-                            p.CountryEntity,
-                            p.BrandEntity};
+        public async Task<IActionResult> GetProductById(int id)
+        {
+            var res = await (from p in db.Product
+                             where p.Id == id
+                             where p.Removed == false
+                             select new
+                             {
+                                 p.Name,
+                                 p.Id,
+                                 p.Description,
+                                 p.Price,
+                                 p.Volume,
+                                 p.Url,
+                                 p.Alcoholpercentage,
+                                 p.CategoryEntity,
+                                 p.CountryEntity,
+                                 p.BrandEntity,
+                                 p.Removed,
+                                 p.Inventory
+                             }).FirstAsync();
+            if (res == null) return NotFound();
             return Ok(res);
         }
 
+<<<<<<< HEAD
         [HttpPut]
         [Route("Purchased")]
         public IActionResult ManageInventory(
         [FromBody]int[] productIds)
+=======
+        [HttpGet]
+        [Route("GetPages/{page_index}/{page_size}")]
+        public IActionResult GetPageCount(int page_index, int page_size)
         {
-            Dictionary<int,int> productcount = new Dictionary<int, int>();
-            foreach (var i in productIds.GroupBy(x => x))
-            {
-                productcount.Add(i.Key,i.Count());
-            }
-            var result = (from p in db.Product
-            where productIds.Contains(p.Id)
-            select p).ToList();
-           foreach (var item in result)
-           {
-               int count;
-               productcount.TryGetValue(item.Id,out count);
-               item.Inventory = item.Inventory - count;
-           }
-            db.SaveChanges();
-            return Ok(201);
+            var res = db.Product.GetPage(page_index, page_size, a => a);
+            if (res == null) return NotFound();
+            return Ok(res);
         }
 
+        [HttpPost, Authorize(Roles = "Admin")]
+        public async Task<ActionResult> AddProduct([FromBody] Product newProduct)
+>>>>>>> dev
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            await db.Product.AddAsync(newProduct);
+            await db.SaveChangesAsync();
+            return CreatedAtAction("GetProductById", new { id = newProduct.Id }, newProduct);
+        }
+
+<<<<<<< HEAD
         [HttpGet]
         [Route("Test")]
         public IActionResult GetPossibleIds(
@@ -128,3 +172,68 @@ namespace DrankReus_api.Controllers
         }
     }
 }
+=======
+
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult> UpdateProduct(int id, Product updateInfo)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            Product product = await db.Product.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            product.CategoryId = updateInfo.CategoryId;
+            product.CountryId = updateInfo.CountryId;
+            product.BrandId = updateInfo.BrandId;
+            product.Name = updateInfo.Name;
+            product.Description = updateInfo.Description;
+            product.Price = updateInfo.Price;
+            product.Volume = updateInfo.Volume;
+            product.Alcoholpercentage = updateInfo.Alcoholpercentage;
+            product.Url = updateInfo.Url;
+            product.Inventory = updateInfo.Inventory;
+
+            db.Product.Update(product);
+            await db.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult> RemoveProduct(int id)
+        {
+            Product product = await db.Product.FindAsync(id);
+            if (product == null || product.Removed)
+            {
+                return NotFound();
+            }
+            product.Removed = true;
+            db.Product.Update(product);
+            await db.SaveChangesAsync();
+            return Ok();
+        }
+        
+        [HttpGet("Search")]
+        public IActionResult GetSearchedProducts(
+        [FromQuery(Name = "Products")]string Products,
+        [FromQuery(Name = "index")]int page_index,
+        [FromQuery(Name = "size")]int page_size
+        ){
+            var res = 
+            (from p in db.Product
+            where p.Name.ToLower().Contains(Products.ToLower())
+            select p);
+
+            if(Products == null || res.ToArray().Length <= 0){
+                return NotFound();
+            }
+
+            return Ok(res.GetPage(page_index, page_size, m => m.Price, true));
+        }
+        
+
+    }}
+>>>>>>> dev

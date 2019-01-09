@@ -3,15 +3,17 @@ using System;
 using DrankReus_api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DrankReusapi.Migrations
 {
     [DbContext(typeof(WebshopContext))]
-    partial class WebshopContextModelSnapshot : ModelSnapshot
+    [Migration("20181129162302_AddOrderAndOrderProducts")]
+    partial class AddOrderAndOrderProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,10 +68,6 @@ namespace DrankReusapi.Migrations
                     b.Property<string>("BuildingNumber")
                         .IsRequired();
 
-                    b.Property<int>("DiscountPercentage")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(0);
-
                     b.Property<string>("Email")
                         .IsRequired();
 
@@ -110,8 +108,6 @@ namespace DrankReusapi.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("Amount");
-
                     b.Property<int>("OrderId");
 
                     b.Property<decimal>("Price");
@@ -140,25 +136,17 @@ namespace DrankReusapi.Migrations
 
                     b.Property<int?>("CountryId");
 
-                    b.Property<string>("Description")
-                        .IsRequired();
+                    b.Property<string>("Description");
 
                     b.Property<int>("Inventory");
 
-                    b.Property<string>("Name")
-                        .IsRequired();
+                    b.Property<string>("Name");
 
                     b.Property<decimal>("Price");
 
-                    b.Property<bool>("Removed")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(false);
+                    b.Property<string>("Url");
 
-                    b.Property<string>("Url")
-                        .IsRequired();
-
-                    b.Property<string>("Volume")
-                        .IsRequired();
+                    b.Property<string>("Volume");
 
                     b.HasKey("Id");
 
@@ -182,10 +170,6 @@ namespace DrankReusapi.Migrations
 
                     b.Property<string>("BuildingNumber");
 
-                    b.Property<int>("DiscountPoints")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(0);
-
                     b.Property<string>("Email")
                         .IsRequired();
 
@@ -202,33 +186,11 @@ namespace DrankReusapi.Migrations
 
                     b.Property<string>("Prefix");
 
-                    b.Property<bool>("Removed")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(false);
-
                     b.Property<string>("Street");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("DrankReus_api.Models.Whishlist", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("ProductId");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Whishlists");
                 });
 
             modelBuilder.Entity("DrankReus_api.Models.Order", b =>
@@ -264,19 +226,6 @@ namespace DrankReusapi.Migrations
                     b.HasOne("DrankReus_api.Models.Country", "CountryEntity")
                         .WithMany()
                         .HasForeignKey("CountryId");
-                });
-
-            modelBuilder.Entity("DrankReus_api.Models.Whishlist", b =>
-                {
-                    b.HasOne("DrankReus_api.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DrankReus_api.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
