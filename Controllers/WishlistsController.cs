@@ -23,11 +23,11 @@ namespace DrankReus_api.Controllers
         public ActionResult Get()
         {
             User user = GetClaimUser();
-            Product[] wishlistProducts = (from w in db.Whishlists
+            var wishlistProducts = (from w in db.Whishlists
                             from p in db.Product
                             where w.UserId == user.Id
                             where w.ProductId == p.Id
-                            select p).ToArray();
+                            select new {wishId = w.Id, product = p }).ToArray();
 
             return Ok(wishlistProducts);
         }

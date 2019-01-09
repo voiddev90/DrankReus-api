@@ -26,7 +26,7 @@ namespace DrankReus_api.Controllers
                           where o.Id == o_p.OrderId
                           where o_p.ProductId == p.Id
                           group new {o_p.Amount, o_p.Price} by p into g
-                          select new {id = g.Key, amount = g.Sum(x => x.Amount), price = (decimal)g.Sum(x => ((decimal)x.Price * x.Amount))}).ToArray();
+                          select new {product = g.Key, amount = g.Sum(x => x.Amount), price = (decimal)g.Sum(x => ((decimal)x.Price * x.Amount))}).ToArray();
             return Ok(soldProducts);
         }
 
