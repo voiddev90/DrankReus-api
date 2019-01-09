@@ -18,7 +18,7 @@ namespace DrankReus_api.Data
     public DbSet<Brand> Brand { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
-    public DbSet<Whishlist> Whishlists { get; set; }
+    public DbSet<Wishlist> Wishlists { get; set; }
 
     protected override void OnModelCreating(ModelBuilder ModelBuilder)
     {

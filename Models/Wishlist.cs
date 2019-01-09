@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DrankReus_api.Models
 {
-    public class Whishlist
+    public class Wishlist
     {
         public int Id { get; set; }
         public int ProductId { get; set; }
