@@ -29,6 +29,12 @@ namespace DrankReus_api.Controllers
                           select new {product = g.Key, amount = g.Sum(x => x.Amount), price = (decimal)g.Sum(x => ((decimal)x.Price * x.Amount))}).ToArray();
             return Ok(soldProducts);
         }
-
+        [HttpGet, Route("Popular")]
+        public ActionResult getPopularProducts(
+            [FromQuery(Name = "month")] int month,
+            [FromQuery(Name = "year")] int year)
+        {
+            return Ok(getSoldProducts(month,year));
+        }
     }
 }
