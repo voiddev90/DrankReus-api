@@ -38,7 +38,7 @@ namespace DrankReus_api.Controllers
             return Ok(getSoldProducts(month,year));
         }
 
-        [HttpGet, Route("productstock")]
+        [HttpGet, Route("productstock"), Authorize(Roles="Admin")]
         public async Task<ActionResult> getLowStock()
         {
             Product[] lowStockProducts = await db.Product.Where(p => p.Inventory <= 5).Where(p => p.Removed == false).ToArrayAsync();
