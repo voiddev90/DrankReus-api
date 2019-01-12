@@ -21,6 +21,11 @@ namespace DrankReus_api.Controllers
             return Ok(db.Country.Select(m => m));
         }
 
+        [HttpGet("{Id}")]
+        public ActionResult GetCountry(int id){
+            return Ok(db.Country.Select(m => m)
+            .Where(m=>m.Id == id));
+        }
         [HttpPost, Authorize(Roles = "Admin")]
         public async Task<ActionResult> AddCountry([FromBody] Country newCountry)
         {
