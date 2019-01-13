@@ -61,6 +61,7 @@ namespace DrankReus_api.Models
           OrderStatus = this.OrderStatus,
           OrderDate = this.OrderDate,
           TaxPercentage = this.TaxPercentage,
+          DiscountPercentage = this.DiscountPercentage,
           TrackCode = this.TrackCode,
           Email = this.Email,
           FirstName = this.FirstName,
