@@ -16,6 +16,12 @@ namespace DrankReus_api.Controllers
             db = context;
         }
 
+        [HttpGet("{Id}")]
+        public ActionResult GetBrand(int id){
+            return Ok(db.Brand.Select(m => m)
+            .Where(m=>m.Id == id).ToArray());
+        }
+
         [HttpGet]
         public IActionResult GetTableData(){
             return Ok(db.Brand.Select(m => m));

@@ -26,9 +26,23 @@ namespace DrankReus_api.Controllers
                           where o.Id == o_p.OrderId
                           where o_p.ProductId == p.Id
                           group new {o_p.Amount, o_p.Price} by p into g
-                          select new {id = g.Key, amount = g.Sum(x => x.Amount), price = (decimal)g.Sum(x => ((decimal)x.Price * x.Amount))}).ToArray();
+                          select new {product = g.Key, amount = g.Sum(x => x.Amount), price = (decimal)g.Sum(x => ((decimal)x.Price * x.Amount))}).ToArray();
             return Ok(soldProducts);
         }
 
+        [HttpGet, Route("Popular")]
+        public ActionResult getPopularProducts(
+            [FromQuery(Name = "month")] int month,
+            [FromQuery(Name = "year")] int year)
+        {
+            return Ok(getSoldProducts(month,year));
+        }
+
+        [HttpGet, Route("productstock"), Authorize(Roles="Admin")]
+        public async Task<ActionResult> getLowStock()
+        {
+            Product[] lowStockProducts = await db.Product.Where(p => p.Inventory <= 5).Where(p => p.Removed == false).ToArrayAsync();
+            return Ok(lowStockProducts);
+        }
     }
 }

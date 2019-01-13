@@ -34,6 +34,7 @@ namespace DrankReus_api.Controllers
         [FromQuery(Name = "products")] int[] products,
         [FromQuery(Name = "Percentage")] int[] Percentage,
         [FromQuery(Name = "Price")] int[] price,
+        [FromQuery(Name = "FilterType")]bool  filtertype,
         [FromQuery(Name = "Ascending")] bool ascending)
         
 
@@ -78,7 +79,7 @@ namespace DrankReus_api.Controllers
                 p.BrandEntity,
                 p.Removed,
                 p.Inventory
-            }).GetPage(page_index, page_size, m => m.Price, ascending));
+            }).GetPage(page_index, page_size, m => filtertype ? m.Price: m.Alcoholpercentage, ascending));
         }
 
         [HttpGet]

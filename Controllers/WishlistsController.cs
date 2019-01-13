@@ -23,11 +23,11 @@ namespace DrankReus_api.Controllers
         public ActionResult Get()
         {
             User user = GetClaimUser();
-            Product[] wishlistProducts = (from w in db.Whishlists
+            var wishlistProducts = (from w in db.Wishlists
                             from p in db.Product
                             where w.UserId == user.Id
                             where w.ProductId == p.Id
-                            select p).ToArray();
+                            select new {wishId = w.Id, product = p }).ToArray();
 
             return Ok(wishlistProducts);
         }
@@ -37,10 +37,10 @@ namespace DrankReus_api.Controllers
         {
             User user = GetClaimUser();
             bool productExists = db.Product.Any(x => x.Id == newWish.id);
-            bool wishExists = db.Whishlists.Any(x => x.UserId == user.Id && x.ProductId == newWish.id);
+            bool wishExists = db.Wishlists.Any(x => x.UserId == user.Id && x.ProductId == newWish.id);
             if(productExists && !wishExists)
             {
-                Whishlist wish = new Whishlist()
+                Wishlist wish = new Wishlist()
                 {
                     UserId = user.Id,
                     ProductId = newWish.id
@@ -59,10 +59,10 @@ namespace DrankReus_api.Controllers
         public ActionResult Delete(int id)
         {
             User user = GetClaimUser();
-            Whishlist deletewish = (from w in db.Whishlists
+            Wishlist deletewish = (from w in db.Wishlists
                                     where w.Id == id && w.UserId == user.Id
                                     select w).FirstOrDefault();
-            db.Whishlists.Remove(deletewish);
+            db.Wishlists.Remove(deletewish);
             db.SaveChanges();
             return Ok();
         }

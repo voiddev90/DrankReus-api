@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace DrankReus_api.Models
 {
@@ -14,6 +16,7 @@ namespace DrankReus_api.Models
       
       public User User { get; set; }
 
+      [JsonConverter(typeof(StringEnumConverter))]
       public OrderStatusEnum OrderStatus { get; set; }
       
       [Required]
@@ -58,6 +61,7 @@ namespace DrankReus_api.Models
           OrderStatus = this.OrderStatus,
           OrderDate = this.OrderDate,
           TaxPercentage = this.TaxPercentage,
+          DiscountPercentage = this.DiscountPercentage,
           TrackCode = this.TrackCode,
           Email = this.Email,
           FirstName = this.FirstName,
@@ -70,6 +74,7 @@ namespace DrankReus_api.Models
       }
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum OrderStatusEnum
     {
       Ordered,
